@@ -1,0 +1,57 @@
+import random
+
+def hangman():
+    # Predefined list of words
+    words = ["python", "hangman", "code", "project", "alpha"]
+    
+    # Randomly select a word
+    word = random.choice(words)
+    
+    # Create a list with underscores for unguessed letters
+    guessed_word = ["_"] * len(word)
+    
+    # Store guessed letters
+    guessed_letters = []
+    
+    # Limit of incorrect attempts
+    attempts = 6
+
+    print("🎮 Welcome to Hangman!")
+    print("Guess the word:", " ".join(guessed_word))
+
+    # Game loop
+    while attempts > 0 and "_" in guessed_word:
+        guess = input("\nEnter a letter: ").lower()
+
+        if len(guess) != 1 or not guess.isalpha():
+            print("❌ Please enter a single alphabet letter.")
+            continue
+
+        if guess in guessed_letters:
+            print("⚠️ You already guessed that letter.")
+            continue
+
+        guessed_letters.append(guess)
+
+        if guess in word:
+            print("✅ Good guess!")
+            # Reveal the guessed letter in the word
+            for i in range(len(word)):
+                if word[i] == guess:
+                    guessed_word[i] = guess
+        else:
+            attempts -= 1
+            print(f"❌ Wrong guess! Attempts left: {attempts}")
+
+        print(" ".join(guessed_word))
+
+    # Check win/lose
+    if "_" not in guessed_word:
+        print("\n🎉 Congratulations! You guessed the word:", word)
+    else:
+        print("\n💀 Game Over! The word was:", word)
+
+
+# Run the game
+if __name__ == "__main__":
+    hangman()
