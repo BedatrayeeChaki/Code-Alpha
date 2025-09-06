@@ -1,0 +1,71 @@
+# 📊 Simple Stock Portfolio Tracker (For VS Code)
+
+# Hardcoded stock prices
+stock_prices = {
+    "AAPL": 180,
+    "TSLA": 250,
+    "GOOGL": 140,
+    "MSFT": 320
+}
+
+portfolio = {}  # Stores user input
+
+print("📊 Stock Portfolio Tracker")
+print("Available stocks:", ", ".join(stock_prices.keys()))
+
+# Take user input
+while True:
+    stock = input("Enter stock symbol (or 'done' to finish): ").upper()
+    if stock == "DONE":
+        break
+    if stock not in stock_prices:
+        print("❌ Stock not available! Try again.")
+        continue
+
+    try:
+        qty = int(input(f"Enter quantity for {stock}: "))
+        if qty < 0:
+            print("❌ Quantity cannot be negative.")
+            continue
+        portfolio[stock] = portfolio.get(stock, 0) + qty
+    except ValueError:
+        print("❌ Please enter a valid number.")
+
+# Calculate total
+total_value = 0
+output_lines = ["📈 Your Portfolio:\n"]
+
+for stock, qty in portfolio.items():
+    price = stock_prices[stock]
+    value = price * qty
+    total_value += value
+    output_lines.append(f"{stock} - {qty} shares @ ${price} = ${value}\n")
+
+output_lines.append(f"\n💰 Total Investment Value: ${total_value}\n")
+
+# Show result on console
+print("\n" + "".join(output_lines))
+
+# Ask user to save
+save_choice = input("Do you want to save the result? (yes/no): ").lower()
+
+if save_choice == "yes":
+    file_type = input("Save as 'txt' or 'csv'?: ").lower()
+    
+    if file_type == "txt":
+        with open("portfolio.txt", "w") as f:
+            f.writelines(output_lines)
+        print("✅ Portfolio saved as portfolio.txt")
+    
+    elif file_type == "csv":
+        with open("portfolio.csv", "w") as f:
+            f.write("Stock,Quantity,Price,Value\n")
+            for stock, qty in portfolio.items():
+                price = stock_prices[stock]
+                value = price * qty
+                f.write(f"{stock},{qty},{price},{value}\n")
+            f.write(f"\nTotal Investment,,,{total_value}\n")
+        print("✅ Portfolio saved as portfolio.csv")
+    
+    else:
+        print("❌ Invalid file type. Skipping save.")
